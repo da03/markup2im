@@ -246,7 +246,7 @@ def evaluate(config, epoch, pipeline):
         for filename, gold_image, pred_image in zip(filenames, gold_images, pred_images):
             gold_image.save(os.path.join(gold_dir, filename))
             pred_image.save(os.path.join(pred_dir, filename))
-        break
+        #break
 
         # Make a grid out of the images
         #image_grid = make_grid(images, rows=batch_size, cols=1)
