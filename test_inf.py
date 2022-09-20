@@ -22,7 +22,7 @@ from PIL import Image
 #torch.backends.cuda.matmul.allow_tf32=True
 import tqdm
 #batch_size = 32
-batch_size = 16
+batch_size = 64
 @dataclass
 class TrainingConfig:
     image_size = (64, 320)  # the generated image resolution
@@ -246,18 +246,18 @@ def evaluate(config, epoch, pipeline):
         for filename, gold_image, pred_image in zip(filenames, gold_images, pred_images):
             gold_image.save(os.path.join(gold_dir, filename))
             pred_image.save(os.path.join(pred_dir, filename))
-        #break
+        break
 
         # Make a grid out of the images
         #image_grid = make_grid(images, rows=batch_size, cols=1)
 
         #image_grid.save(f"{test_dir}/swap_{swap_step}.png")
         print ('='*10)
-        break
+        #break
 
 
 
-state_dict = torch.load('model_e500_lr0.0001.pt.45', map_location='cpu')
+state_dict = torch.load('model_latest', map_location='cpu')
 state_dict_out = {}
 for k in state_dict:
     k_out = k.replace('module.', '')
