@@ -1,12 +1,12 @@
 import torch
-import clip
+import clip as clip_utils
 
 from PIL import Image
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
+model, preprocess = clip_utils.load("ViT-B/32", device=device)
 
-def calc_clip_logits(pred_img: Image, gold_img: Image) -> float:
+def clip_score(pred_img: Image, gold_img: Image) -> float:
     pred_img, gold_img = preprocess(pred_img).to(device), preprocess(gold_img).to(device)
 
     with torch.no_grad():
