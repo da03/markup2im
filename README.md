@@ -1,6 +1,6 @@
 # Markup-to-Image Diffusion Models with Scheduled Sampling
 
-![](math_rendering.gif)
+![](imgs/math_rendering.gif)
 
 ![](table_rendering.gif)
 
@@ -39,6 +39,13 @@ All datasets have been uploaded to [Huggingface datasets](https://huggingface.co
 
 ### Visualizations
 
+```
+python scripts/visualize_intermediate_steps.py --model_path models/latex/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/latex/scheduled_sampling_visualization --save_intermediate_every 1
+```
+
+```
+python scripts/visualize_intermediate_steps.py --model_path models/latex/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/latex/baseline_visualization --save_intermediate_every 1
+```
 
 ## Citation
 
