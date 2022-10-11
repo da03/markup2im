@@ -1,10 +1,10 @@
 # Markup-to-Image Diffusion Models with Scheduled Sampling
 
-We provide code to reproduce our results on markup-to-image generation. Our code is built on top of [HuggingFace diffusers](https://github.com/huggingface/diffusers) and [HuggingFace transformers](https://github.com/huggingface/transformers).
+We provide code to reproduce our results on markup-to-image generation. Our code is built on top of HuggingFace [diffusers](https://github.com/huggingface/diffusers) and [transformers](https://github.com/huggingface/transformers).
 
 ## Online Demo
 
-An online demo of latex rendering can be found at [https://huggingface.co/spaces/yuntian-deng/latex2im](https://huggingface.co/spaces/yuntian-deng/latex2im).
+An online demo can be found at [https://huggingface.co/spaces/yuntian-deng/latex2im](https://huggingface.co/spaces/yuntian-deng/latex2im).
 
 ## Generation Examples
 
