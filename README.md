@@ -1,6 +1,8 @@
 # Markup-to-Image Diffusion Models with Scheduled Sampling
 
-![](imgs/math_rendering.gif)
+Scheduled Sampling            |   Baseline
+:----------------------------:|:---------------------------------------:
+![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)
 
 ![](table_rendering.gif)
 
