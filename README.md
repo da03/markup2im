@@ -6,9 +6,9 @@ We provide code to reproduce our results on markup-to-image generation. Our code
 
 ## Generation Examples
 
-Scheduled Sampling            |   Baseline
-:----------------------------:|:---------------------------------------:
-![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)
+Scheduled Sampling            |   Baseline                              |        Ground Truth      |
+:----------------------------:|:---------------------------------------:|:------------------------:|
+![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)  | ![](imgs/433d71b530.png) |
 
 ![](table_rendering.gif)
 
