@@ -1,2 +1,10 @@
 model_latest filter=lfs diff=lfs merge=lfs -text
 model_latest_html filter=lfs diff=lfs merge=lfs -text
+models/math/baseline/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/math/scheduled_sampling/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/tables/baseline/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/tables/scheduled_sampling/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/music/baseline/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/music/scheduled_sampling/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/molecules/baseline/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
+models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100 filter=lfs diff=lfs merge=lfs -text
