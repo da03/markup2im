@@ -53,7 +53,7 @@ def process_args(args):
                         type=int, default=None,
                         help=('Specifies the width of images to generate. If set to None, will be inferred according to dataset_name.'
                         ))
-    parser.add_argument('--filter_filename',
+    parser.add_argument('--select_filename',
                         type=str, default='None',
                         help=('Only run inference on examples with this filename.'
                         ))
@@ -193,9 +193,9 @@ def main(args):
     dataset = dataset.shuffle(seed=args.seed1)
    
     # Filter data (such as 433d71b530.png)
-    if args.filter_filename.lower() != 'none':
-        print (f'Only running inference on {args.filter_filename}')
-        dataset = dataset.filter(lambda x: x['filename'] == args.filter_filename)
+    if args.select_filename.lower() != 'none':
+        print (f'Only running inference on {args.select_filename}')
+        dataset = dataset.select(lambda x: x['filename'] == args.select_filename)
 
     # Load input tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.encoder_model_type)

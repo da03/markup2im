@@ -14,7 +14,7 @@ def process_args(args):
                         type=str, required=True,
                         help=('Input directory containing images_pred and images_gold.'
                         ))
-    parser.add_argument('--filter_filename',
+    parser.add_argument('--select_filename',
                         type=str, required=True,
                         help=('Filename for which to generate a gif.'
                         ))
@@ -30,8 +30,8 @@ def process_args(args):
     return parameters
 
 def main(args):
-    filenames = glob.glob(os.path.join(args.input_dir, f'images_pred/{args.filter_filename}_*'))
-    assert len(filenames) > 0, f'Please make sure that the input folder contains images with prefix {args.filter_filename}'
+    filenames = glob.glob(os.path.join(args.input_dir, f'images_pred/{args.select_filename}_*'))
+    assert len(filenames) > 0, f'Please make sure that the input folder contains images with prefix {args.select_filename}'
     #import pdb; pdb.set_trace()
     filenames = sorted(list(filenames))
     frames = []
