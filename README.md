@@ -11,8 +11,8 @@ Scheduled Sampling            |   Baseline                              |       
 ![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)  | ![](imgs/433d71b530.png) |
 ![](imgs/tables_rendering.gif)|  ![](imgs/tables_rendering_baseline.gif)| ![](imgs/42725-full.png) |
 ![](imgs/music_rendering.gif)|  ![](imgs/music_rendering_baseline.gif)| ![](imgs/) |
+![](imgs/molecules_rendering.gif)|  ![](imgs/molecules_rendering_baseline.gif)| ![](imgs/B-1173.png) |
 
-![](molecule_rendering.gif)
 
 
 
@@ -113,6 +113,30 @@ python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2ht
 
 ```
 python scripts/make_gif.py --input_dir outputs/tables/baseline_visualization/ --output_filename imgs/tables_rendering_baseline.gif --select_filename 42725-full.png --show_every 10
+```
+
+#### Molecules
+
+To visualize the generation process, we need to first use the following command to save the intermediate images during generation:
+
+```
+python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/scheduled_sampling_visualization --save_intermediate_every 1
+```
+
+Next, we put together a gif image from the generated images:
+
+```
+python scripts/make_gif.py --input_dir outputs/molecules/scheduled_sampling_visualization/ --output_filename imgs/molecules_rendering.gif --select_filename B-1173.png --show_every 10
+```
+
+We can similarly visualize results from the baseline.
+
+```
+python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/baseline_visualization --save_intermediate_every 1
+```
+
+```
+python scripts/make_gif.py --input_dir outputs/molecules/baseline_visualization/ --output_filename imgs/molecules_rendering_baseline.gif --select_filename B-1173.png --show_every 10
 ```
 
 ## Citation

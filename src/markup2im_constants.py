@@ -2,24 +2,28 @@ DATASET_TO_IMAGE_SIZES = {
     'yuntian-deng/im2latex-100k': (64, 320),
     'yuntian-deng/im2html-100k': (64, 64),
     'yuntian-deng/im2ly-35k-syn': (192, 448),
+    'yuntian-deng/im2smiles-20k': (128, 128),
 }
 
 DATASET_TO_INPUT_FIELDS = {
     'yuntian-deng/im2latex-100k': 'formula',
     'yuntian-deng/im2html-100k': 'html',
     'yuntian-deng/im2ly-35k-syn': 'source',
+    'yuntian-deng/im2smiles-20k': 'smiles',
 }
 
 DATASET_TO_ENCODER_MODEL_TYPES = {
     'yuntian-deng/im2latex-100k': 'EleutherAI/gpt-neo-125M',
     'yuntian-deng/im2html-100k': 'EleutherAI/gpt-neo-125M',
     'yuntian-deng/im2ly-35k-syn': 'EleutherAI/gpt-neo-125M',
+    'yuntian-deng/im2smiles-20k': 'DeepChem/ChemBERTa-77M-MLM',
 }
 
 DATASET_TO_COLOR_MODES = {
     'yuntian-deng/im2latex-100k': 'grayscale',
     'yuntian-deng/im2html-100k': 'grayscale',
     'yuntian-deng/im2ly-35k-syn': 'grayscale',
+    'yuntian-deng/im2smiles-20k': 'rgb',
 }
 
 def get_image_size(dataset_name):
