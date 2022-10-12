@@ -27,10 +27,10 @@ pip install -qU git+https://github.com/da03/diffusers
 
 All datasets have been uploaded to [Huggingface datasets](https://huggingface.co/yuntian-deng).
 
-* Math: [data]() [model]()
-* Simple Tables: [data]() [model]()
-* Sheet Music: [data]() [model]()
-* Molecules: [data]() [model]()
+* Math: [data](https://huggingface.co/datasets/yuntian-deng/im2latex-100k) [model](models/math/scheduled_sampling/model_e100_lr0.0001.pt.100)
+* Simple Tables: [data](https://huggingface.co/datasets/yuntian-deng/im2html-100k) [model](models/tables/scheduled_sampling/model_e100_lr0.0001.pt.100)
+* Sheet Music: [data](https://huggingface.co/datasets/yuntian-deng/im2ly-35k-syn) [model](music/math/scheduled_sampling/model_e100_lr0.0001.pt.100)
+* Molecules: [data](https://huggingface.co/datasets/yuntian-deng/im2smiles-20k) [model](models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100)
 
 ## Usage
 
