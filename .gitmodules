@@ -1,0 +1,3 @@
+[submodule "latex2im"]
+	path = latex2im
+	url = https://huggingface.co/spaces/yuntian-deng/latex2im
