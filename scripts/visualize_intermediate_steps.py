@@ -65,15 +65,15 @@ def process_args(args):
                         type=str, default='test',
                         help=('Dataset split.'
                         ))
-    parser.add_argument('--batch-size',
+    parser.add_argument('--batch_size',
                         type=int, default=32,
                         help=('Batch size.'
                         ))
-    parser.add_argument('--num-batches',
+    parser.add_argument('--num_batches',
                         type=int, default=1,
                         help=('Number of batches to decode.'
                         ))
-    parser.add_argument('--max-input-length',
+    parser.add_argument('--max_input_length',
                         type=int, default=1024,
                         help=('Max input length. Longer inputs will be truncated.'
                         ))
