@@ -36,6 +36,45 @@ All datasets have been uploaded to [Huggingface datasets](https://huggingface.co
 
 ### Training
 
+#### Math
+
+To train the diffusion model,
+
+```
+python train.py --save_dir models/math
+```
+#### Tables
+
+To train the diffusion model,
+
+```
+python train.py --dataset_name yuntian-deng/im2html-100k --save_dir models/tables 
+```
+
+#### Music
+
+In our paper, we trained on the music dataset with 4 A100 GPUs. You might need to tune `--batch_size` and  `--gradient_accumulation_steps` if you want to use a single GPU to train or if your GPUs have less memory.
+
+We first run
+
+```
+accelerate config
+```
+to use 4 GPUs on a single machine. Note that we did not use fp16 or DeepSpeed.
+
+Next, we launch multi-GPU training using accelerate:
+
+```
+accelerate launch train.py --dataset_name yuntian-deng/im2ly-35k-syn --save_dir models/music
+```
+
+#### Molecules
+
+To train the diffusion model,
+
+```
+python train.py --dataset_name yuntian-deng/im2smiles-20k --save_dir models/molecules
+```
 
 ### Generation
 

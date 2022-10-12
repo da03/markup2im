@@ -19,6 +19,7 @@ from accelerate import Accelerator
 
 sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../src/'))
 from markup2im_constants import get_image_size, get_input_field, get_encoder_model_type, get_color_mode
+from markup2im_models import create_image_decoder, encode_text
 
 #torch.backends.cuda.matmul.allow_tf32=True
 
@@ -92,26 +93,19 @@ def process_args(args):
     parameters = parser.parse_args(args)
     return parameters
 
-def load_pipeline(model, model_path):
+def load_pipeline(image_decoder, model_path):
     state_dict = torch.load(model_path, map_location='cpu')
     state_dict_new = {}
     for k in state_dict:
         k_out = k.replace('module.', '')
         state_dict_new[k_out] = state_dict[k]
-    model.load_state_dict(state_dict_new)
+    image_decoder.load_state_dict(state_dict_new)
     
     accelerator = Accelerator(mixed_precision='no')
     noise_scheduler = DDPMScheduler(num_train_timesteps=1000, tensor_format="pt")
-    pipeline = DDPMPipeline(unet=model, scheduler=noise_scheduler)
+    pipeline = DDPMPipeline(unet=image_decoder, scheduler=noise_scheduler)
     return pipeline
 
-def forward_text(text_encoder, input_ids, attention_mask):
-    with torch.no_grad():
-        outputs = text_encoder(input_ids=input_ids, attention_mask=attention_mask)
-        last_hidden_state = outputs.last_hidden_state 
-        if attention_mask is not None:
-            last_hidden_state = attention_mask.unsqueeze(-1) * last_hidden_state
-    return last_hidden_state
 
 def evaluate(dataloader, tokenizer, text_encoder, pipeline, output_dir, num_batches, save_intermediate_every=-1):
     gold_dir = os.path.join(output_dir, "images_gold")
@@ -123,7 +117,7 @@ def evaluate(dataloader, tokenizer, text_encoder, pipeline, output_dir, num_batc
         filenames = batch['filenames']
         input_ids = batch['input_ids'].cuda()
         masks = batch['attention_mask'].cuda()
-        encoder_hidden_states = forward_text(text_encoder, input_ids, masks)
+        encoder_hidden_states = encode_text(text_encoder, input_ids, masks)
         for iii, input_id in enumerate(input_ids):
             formula = tokenizer.decode(input_id, skip_special_symbols=True).replace('<|endoftext|>', '')
             print (f'{iii:04d}: {formula}')
@@ -195,7 +189,7 @@ def main(args):
     # Filter data (such as 433d71b530.png)
     if args.select_filename.lower() != 'none':
         print (f'Only running inference on {args.select_filename}')
-        dataset = dataset.select(lambda x: x['filename'] == args.select_filename)
+        dataset = dataset.filter(lambda x: x['filename'] == args.select_filename)
 
     # Load input tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.encoder_model_type)
@@ -249,37 +243,13 @@ def main(args):
     # Create and load models
     text_encoder = AutoModel.from_pretrained(args.encoder_model_type).cuda()
     # forward a fake batch to figure out cross_attention_dim
-    hidden_states = forward_text(text_encoder, torch.zeros(1,1).long().cuda(), None)
+    hidden_states = encode_text(text_encoder, torch.zeros(1,1).long().cuda(), None)
     cross_attention_dim = hidden_states.shape[-1]
     
-    model = UNet2DConditionModel(
-            sample_size=args.image_size,
-            in_channels=args.color_channels,
-            out_channels=args.color_channels,
-            layers_per_block=2,
-            block_out_channels=(128, 128, 256, 256, 512, 512),
-            down_block_types=(
-                "DownBlock2D",
-                "DownBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionDownBlock2D", 
-                "CrossAttnDecoderPositionEncoderPositionDownBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionDownBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionDownBlock2D",
-            ), 
-            up_block_types=(
-                "CrossAttnDecoderPositionEncoderPositionUpBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionUpBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionUpBlock2D",
-                "CrossAttnDecoderPositionEncoderPositionUpBlock2D",
-                "UpBlock2D",
-                "UpBlock2D" 
-              ),
-              cross_attention_dim=cross_attention_dim,
-              mid_block_type='UNetMidBlock2DCrossAttnDecoderPositionEncoderPosition'
-        )
-    
-    model = model.cuda()
-    pipeline = load_pipeline(model, args.model_path)
+    image_decoder = create_image_decoder(image_size=args.image_size, color_channels=args.color_channels, \
+            cross_attention_dim=cross_attention_dim)
+    image_decoder = image_decoder.cuda()
+    pipeline = load_pipeline(image_decoder, args.model_path)
     
     evaluate(eval_dataloader, tokenizer, text_encoder, pipeline, args.output_dir, args.num_batches, args.save_intermediate_every)
 
