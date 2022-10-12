@@ -19,6 +19,7 @@ Scheduled Sampling            |   Baseline                              |       
 
 ```
 pip install transformers
+pip install accelerate
 pip install -qU git+https://github.com/da03/diffusers
 ```
 

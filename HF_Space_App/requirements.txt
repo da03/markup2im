@@ -1,2 +1,0 @@
-transformers
-git+https://github.com/da03/diffusers.git@c43dcb15f2b2832fcb084b32f74bc775c5ab9f7a
