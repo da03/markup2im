@@ -18,7 +18,7 @@ from diffusers import DDPMPipeline
 from accelerate import Accelerator
 
 sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../src/'))
-from constants import get_image_size, get_input_field, get_encoder_model_type, get_color_mode
+from markup2im_constants import get_image_size, get_input_field, get_encoder_model_type, get_color_mode
 
 #torch.backends.cuda.matmul.allow_tf32=True
 
