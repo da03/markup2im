@@ -9,7 +9,6 @@ We provide code to reproduce our results on markup-to-image generation. Our code
 Scheduled Sampling            |   Baseline                              |        Ground Truth      |
 :----------------------------:|:---------------------------------------:|:------------------------:|
 ![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)  | ![](imgs/433d71b530.png) |
-:----------------------------:|:---------------------------------------:|:------------------------:|
 ![](imgs/tables_rendering.gif)|  ![](imgs/tables_rendering_baseline.gif)| ![](imgs/42725-full.png) |
 
 ![](music_rendering.gif)
