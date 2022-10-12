@@ -18,7 +18,7 @@ from diffusers import DDPMPipeline
 from accelerate import Accelerator
 
 sys.path.insert(0, '%s'%os.path.join(os.path.dirname(__file__), '../src/'))
-from constants import get_image_size, get_encoder_model_type, get_color_mode
+from constants import get_image_size, get_input_field, get_encoder_model_type, get_color_mode
 
 #torch.backends.cuda.matmul.allow_tf32=True
 
@@ -32,6 +32,10 @@ def process_args(args):
     parser.add_argument('--model_path',
                         type=str, default='models/latex/scheduled_sampling/model_e100_lr0.0001.pt.100',
                         help=('Specifies which trained model to decode from.'
+                        ))
+    parser.add_argument('--input_field',
+                        type=str, default=None,
+                        help=('Field in the dataset containing input markups. If set to None, will be inferred according to dataset_name.'
                         ))
     parser.add_argument('--color_mode',
                         type=str, default=None,
@@ -157,6 +161,13 @@ def main(args):
         image_size = get_image_size(args.dataset_name)
         print (f'Default image size: {image_size}')
     args.image_size = image_size
+    if args.input_field is not None:
+        input_field = args.input_field
+    else:
+        print (f'Using default input field for dataset {args.dataset_name}')
+        input_field = get_input_field(args.dataset_name)
+        print (f'Default input field: {input_field}')
+    args.input_field = input_field
     if args.encoder_model_type is not None:
         encoder_model_type = args.encoder_model_type
     else:
@@ -201,7 +212,7 @@ def main(args):
     
     def transform(examples):
         gold_images = [image for image in examples["image"]]
-        formulas_and_masks = [preprocess_formula(formula) for formula in examples['formula']]
+        formulas_and_masks = [preprocess_formula(formula) for formula in examples[args.input_field]]
         formulas = [item[0] for item in formulas_and_masks]
         masks = [item[1] for item in formulas_and_masks]
         filenames = examples['filename']

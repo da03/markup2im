@@ -3,6 +3,11 @@ DATASET_TO_IMAGE_SIZES = {
     'yuntian-deng/im2html-100k': (64, 64),
 }
 
+DATASET_TO_INPUT_FIELDS = {
+    'yuntian-deng/im2latex-100k': 'formula',
+    'yuntian-deng/im2html-100k': 'html',
+}
+
 DATASET_TO_ENCODER_MODEL_TYPES = {
     'yuntian-deng/im2latex-100k': "EleutherAI/gpt-neo-125M",
     'yuntian-deng/im2html-100k': "EleutherAI/gpt-neo-125M",
@@ -18,6 +23,12 @@ def get_image_size(dataset_name):
         print (f'Please specify image size for customized datasets through image_height and image_width!')
         raise NotImplementedError
     return DATASET_TO_IMAGE_SIZES[dataset_name]
+
+def get_input_field(dataset_name):
+    if dataset_name not in DATASET_TO_INPUT_FIELDS:
+        print (f'Please specify image size for customized datasets through input_field!')
+        raise NotImplementedError
+    return DATASET_TO_INPUT_FIELDS[dataset_name]
 
 def get_encoder_model_type(dataset_name):
     if dataset_name not in DATASET_TO_ENCODER_MODEL_TYPES:

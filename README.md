@@ -95,3 +95,13 @@ python scripts/make_gif.py --input_dir outputs/math/baseline_visualization/ --ou
 
 ## Citation
 
+```
+@misc{deng2022markuptoimage,
+      title={Markup-to-Image Diffusion Models with Scheduled Sampling}, 
+      author={Yuntian Deng and Noriyuki Kojima and Alexander M. Rush},
+      year={2022},
+      eprint={2210.05147},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
