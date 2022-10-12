@@ -78,6 +78,38 @@ python train.py --dataset_name yuntian-deng/im2smiles-20k --save_dir models/mole
 
 ### Generation
 
+#### Math
+
+To generate,
+
+```
+python scripts/generate.py --model_path models/math/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/math --save_intermediate_every -1
+```
+
+#### Tables
+
+To generate,
+
+```
+python scripts/generate.py --dataset_name yuntian-deng/im2html-100k --model_path models/tables/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/tables --save_intermediate_every -1
+```
+
+#### Music
+
+To generate,
+
+```
+python scripts/generate.py --dataset_name yuntian-deng/im2ly-35k-syn --model_path models/music/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/music --save_intermediate_every -1
+```
+
+#### Molecules
+
+To generate,
+
+```
+python scripts/generate.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules --save_intermediate_every -1
+```
+
 ### Visualizations
 
 #### Math
@@ -85,7 +117,7 @@ python train.py --dataset_name yuntian-deng/im2smiles-20k --save_dir models/mole
 To visualize the generation process, we need to first use the following command to save the intermediate images during generation:
 
 ```
-python scripts/visualize_intermediate_steps.py --model_path models/math/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/math/scheduled_sampling_visualization --save_intermediate_every 1
+python scripts/generate.py --model_path models/math/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/math/scheduled_sampling_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 Next, we put together a gif image from the generated images:
@@ -97,7 +129,7 @@ python scripts/make_gif.py --input_dir outputs/math/scheduled_sampling_visualiza
 We can similarly visualize results from the baseline.
 
 ```
-python scripts/visualize_intermediate_steps.py --model_path models/math/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/math/baseline_visualization --save_intermediate_every 1
+python scripts/generate.py --model_path models/math/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/math/baseline_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 ```
@@ -109,7 +141,7 @@ python scripts/make_gif.py --input_dir outputs/math/baseline_visualization/ --ou
 To visualize the generation process, we need to first use the following command to save the intermediate images during generation:
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2html-100k --model_path models/tables/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/tables/scheduled_sampling_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2html-100k --model_path models/tables/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/tables/scheduled_sampling_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 Next, we put together a gif image from the generated images:
@@ -121,7 +153,7 @@ python scripts/make_gif.py --input_dir outputs/tables/scheduled_sampling_visuali
 We can similarly visualize results from the baseline.
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2html-100k --model_path models/tables/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/tables/baseline_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2html-100k --model_path models/tables/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/tables/baseline_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 ```
@@ -133,7 +165,7 @@ python scripts/make_gif.py --input_dir outputs/tables/baseline_visualization/ --
 To visualize the generation process, we need to first use the following command to save the intermediate images during generation:
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2ly-35k-syn --model_path models/music/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/music/scheduled_sampling_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2ly-35k-syn --model_path models/music/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/music/scheduled_sampling_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 Next, we put together a gif image from the generated images:
@@ -145,7 +177,7 @@ python scripts/make_gif.py --input_dir outputs/music/scheduled_sampling_visualiz
 We can similarly visualize results from the baseline.
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2ly-35k-syn --model_path models/music/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/music/baseline_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2ly-35k-syn --model_path models/music/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/music/baseline_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 ```
@@ -157,7 +189,7 @@ python scripts/make_gif.py --input_dir outputs/music/baseline_visualization/ --o
 To visualize the generation process, we need to first use the following command to save the intermediate images during generation:
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/scheduled_sampling_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/scheduled_sampling/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/scheduled_sampling_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 Next, we put together a gif image from the generated images:
@@ -169,7 +201,7 @@ python scripts/make_gif.py --input_dir outputs/molecules/scheduled_sampling_visu
 We can similarly visualize results from the baseline.
 
 ```
-python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/baseline_visualization --save_intermediate_every 1
+python scripts/generate.py --dataset_name yuntian-deng/im2smiles-20k --model_path models/molecules/baseline/model_e100_lr0.0001.pt.100 --output_dir outputs/molecules/baseline_visualization --save_intermediate_every 1 --num_batches 1
 ```
 
 ```
