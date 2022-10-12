@@ -10,7 +10,7 @@ Scheduled Sampling            |   Baseline                              |       
 :----------------------------:|:---------------------------------------:|:------------------------:|
 ![](imgs/math_rendering.gif)  |  ![](imgs/math_rendering_baseline.gif)  | ![](imgs/433d71b530.png) |
 ![](imgs/tables_rendering.gif)|  ![](imgs/tables_rendering_baseline.gif)| ![](imgs/42725-full.png) |
-![](imgs/music_rendering.gif) |  ![](imgs/music_rendering_baseline.gif) | ![](imgs/comp.18138.png) |
+![](imgs/music_rendering.gif) |  ![](imgs/music_rendering_baseline.gif) | ![](imgs/comp.17342.png) |
 ![](imgs/molecules_rendering.gif)|  ![](imgs/molecules_rendering_baseline.gif)| ![](imgs/B-1173.png) |
 
 ## Prerequisites
@@ -99,7 +99,7 @@ python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2ly
 Next, we put together a gif image from the generated images:
 
 ```
-python scripts/make_gif.py --input_dir outputs/music/scheduled_sampling_visualization/ --output_filename imgs/music_rendering.gif --select_filename comp.18138.png --show_every 10
+python scripts/make_gif.py --input_dir outputs/music/scheduled_sampling_visualization/ --output_filename imgs/music_rendering.gif --select_filename comp.17342.png --show_every 10
 ```
 
 We can similarly visualize results from the baseline.
@@ -109,7 +109,7 @@ python scripts/visualize_intermediate_steps.py --dataset_name yuntian-deng/im2ly
 ```
 
 ```
-python scripts/make_gif.py --input_dir outputs/music/baseline_visualization/ --output_filename imgs/music_rendering_baseline.gif --select_filename comp.18138.png --show_every 10
+python scripts/make_gif.py --input_dir outputs/music/baseline_visualization/ --output_filename imgs/music_rendering_baseline.gif --select_filename comp.17342.png --show_every 10
 ```
 
 #### Molecules
