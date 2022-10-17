@@ -82,16 +82,12 @@ def process_args(args):
                         scheduled sampling."""
                         ))
     parser.add_argument('--scheduled_sampling_weights_end',
-                        type=float, nargs='+', default=[0.5,],
+                        type=float, nargs='+', default=[0.8,],
                         help=("""The end weight of applying scheduled sampling. 
                         Pass in a list for higher-order (higher number of rollout steps) scheduled sampling. For example,
                         `--scheduled_sampling_weights_end 0.2 --scheduled_sampling_weights_end 0.3` will end with
                         0.2 weight of applying first-order (m=1) scheduled sampling and 0.3 of applying second-order (m=2)
                         scheduled sampling."""
-                        ))
-    parser.add_argument('--min_scheduled_sampling_step',
-                        type=int, default=50,
-                        help=('Do not apply scheduled sampling if the number of steps is smaller than this to avoid loss blowing up.'
                         ))
     parser.add_argument('--learning_rate',
                         type=int, default=1e-4,
@@ -135,11 +131,9 @@ def process_args(args):
 def train(train_dataloader, save_dir, save_model_every, \
         text_encoder, image_decoder, noise_scheduler, \
         scheduled_sampling_weights_start, scheduled_sampling_weights_end, \
-        min_scheduled_sampling_step, \
         optimizer, lr_scheduler, num_epochs, gradient_accumulation_steps=1, \
         clip_grad_norm=1.0, learning_rate=1e-4, \
         mixed_precision='no'):
-    #import pdb; pdb.set_trace()
     learning_rate = optimizer.defaults['lr']
     # Initialize accelerator and tensorboard logging
     accelerator = Accelerator(
@@ -154,60 +148,46 @@ def train(train_dataloader, save_dir, save_model_every, \
         image_decoder, optimizer, train_dataloader, lr_scheduler
     )
     
+    scheduled_sampling_weights_start = np.array(scheduled_sampling_weights_start)
+    scheduled_sampling_weights_end = np.array(scheduled_sampling_weights_end)
     global_step = 0
+    total_steps = len(train_dataloader)*num_epochs
     for epoch in range(num_epochs):
-        m_probs = []
-        # the weights of scheduled sampling change linearly throughout training
-        for prob_start_m, prob_end_m in zip(scheduled_sampling_weights_start, scheduled_sampling_weights_end):
-            prob_m = prob_start_m + epoch / num_epochs * (prob_end_m - prob_start_m)
-            m_probs.append(prob_m)
-        m_probs.insert(0, 1-sum(m_probs)) # the weight of not applying scheduled sampling
-        acc_probs = [] # accumulated probabilities
-        acc_prob = 0
-        for p in m_probs:
-            acc_prob += p
-            acc_probs.append(acc_prob)
-        print ('='*10)
-        disp_str = ' '.join([f'{i} ({m_probs[i]})' for i in range(len(m_probs))])
-        print (f'probs of applying rollout m: {disp_str}')
-        print (f'acc probs: {acc_probs}')
-        print ('='*10)
         progress_bar = tqdm(total=len(train_dataloader), disable=not accelerator.is_local_main_process)
         progress_bar.set_description(f"Epoch {epoch}")
 
         for step, batch in enumerate(train_dataloader):
+            # the weights of scheduled sampling change linearly throughout training
+            m_probs = scheduled_sampling_weights_start + global_step / total_steps * \
+                    (scheduled_sampling_weights_end - scheduled_sampling_weights_start)
+            m_probs = np.insert(m_probs, 0, 1-m_probs.sum()) # the weight of not applying scheduled sampling (m=0)
+            disp_str = '"' + ' '.join([f'm={i} ({m_probs[i]:.2f})' for i in range(len(m_probs))]) + '"'
+
             clean_images = batch['images'].to(accelerator.device)
             input_ids = batch['input_ids'].to(accelerator.device)
             masks = batch['attention_mask'].to(accelerator.device)
             encoder_hidden_states = encode_text(text_encoder, input_ids, masks)
-            # Sample noise to add to the images
-            noise = torch.randn(clean_images.shape).to(clean_images.device)
             bs = clean_images.shape[0]
 
             # Sample a random timestep for each image
             timesteps = torch.randint(0, noise_scheduler.num_train_timesteps, (bs,), device=clean_images.device).long()
 
             # Sample m in scheduled sampling according to m_probs
-            # Note that we use the same m per batch on the same device
-            p = random.random()
-            for m in range(len(m_probs)):
-                acc_prob = acc_probs[m]
-                if p < acc_prob:
-                    break
+            # Note that we use the same m per batch on the same device for efficiency
+            m = np.random.choice(len(m_probs), size=1, p=m_probs)[0]
 
-            # Skip scheduled sampling if t is too small to avoid loss blowing up
-            if min(timesteps) <= min_scheduled_sampling_step:
-                m = 0
             # If there's not enough number of steps then decrease m
             while max(timesteps) >= noise_scheduler.num_train_timesteps-m:
                 m -= 1
 
             # find input to the diffusion model
             with torch.no_grad():
-                # first, sample t + m 
+                # Sample noise to add to the images
+                noise = torch.randn(clean_images.shape).to(clean_images.device)
+                # first, sample t + m using Q
                 noisy_images_t_plus_m = noise_scheduler.add_noise(clean_images, noise, timesteps+m)
                 noisy_images_t_plus_s = noisy_images_t_plus_m
-                # next, decode and clean
+                # next, roll back to t using P
                 for s in range(m):
                     # predict noise
                     noise_pred_rollback_s = image_decoder(noisy_images_t_plus_s, timesteps+m-s, encoder_hidden_states, attention_mask=masks)["sample"]
@@ -235,7 +215,7 @@ def train(train_dataloader, save_dir, save_model_every, \
                 optimizer.zero_grad()
             
             progress_bar.update(1)
-            logs = {"loss": loss.detach().item()*gradient_accumulation_steps, "lr": lr_scheduler.get_last_lr()[0], "step": global_step}
+            logs = {"loss": loss.detach().item()*gradient_accumulation_steps, "lr": lr_scheduler.get_last_lr()[0], "step": global_step, 'scheduled sampling': disp_str}
             progress_bar.set_postfix(**logs)
             accelerator.log(logs, step=global_step)
             global_step += 1
@@ -371,7 +351,6 @@ def main(args):
     train(train_dataloader, args.save_dir, args.save_model_every, \
         text_encoder, image_decoder, noise_scheduler, \
         args.scheduled_sampling_weights_start, args.scheduled_sampling_weights_end, \
-        args.min_scheduled_sampling_step, \
         optimizer, lr_scheduler, args.num_epochs, \
         gradient_accumulation_steps=args.gradient_accumulation_steps, \
         clip_grad_norm=args.clip_grad_norm, \
