@@ -141,6 +141,7 @@ def train(train_dataloader, save_dir, save_model_every, \
         gradient_accumulation_steps=gradient_accumulation_steps, 
         logging_dir=os.path.join(save_dir, "logs")
     )
+    text_encoder = text_encoder.to(accelerator.device)
     if accelerator.is_main_process:
         accelerator.init_trackers("markup2im_train")
     
