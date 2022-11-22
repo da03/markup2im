@@ -1,0 +1,4 @@
+transformers
+datasets
+accelerate
+git+https://github.com/da03/diffusers
