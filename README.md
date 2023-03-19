@@ -212,12 +212,12 @@ python scripts/make_gif.py --input_dir outputs/molecules/baseline_visualization/
 ## Citation
 
 ```
-@misc{deng2022markuptoimage,
-      title={Markup-to-Image Diffusion Models with Scheduled Sampling}, 
-      author={Yuntian Deng and Noriyuki Kojima and Alexander M. Rush},
-      year={2022},
-      eprint={2210.05147},
-      archivePrefix={arXiv},
-      primaryClass={cs.LG}
+@inproceedings{
+deng2023markuptoimage,
+title={Markup-to-Image Diffusion Models with Scheduled Sampling},
+author={Yuntian Deng and Noriyuki Kojima and Alexander M Rush},
+booktitle={The Eleventh International Conference on Learning Representations },
+year={2023},
+url={https://openreview.net/forum?id=81VJDmOE2ol}
 }
 ```
